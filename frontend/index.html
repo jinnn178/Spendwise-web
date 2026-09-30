@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spendwise — Personal Expense Tracker</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script>
+    const savedTheme = localStorage.getItem('spendwise-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+  <link rel="stylesheet" href="css/styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#accounts" aria-label="Spendwise accounts"><span class="brand-mark">S</span><span>spendwise<small>PERSONAL FINANCE</small></span></a>
+      <div class="workspace-label">WORKSPACE</div>
+      <nav aria-label="Main navigation" id="main-nav">
+        <a href="#dashboard" data-view="dashboard"><i class="ph ph-squares-four nav-icon"></i> Dashboard</a>
+        <a href="#accounts" data-view="accounts"><i class="ph ph-wallet nav-icon"></i> Accounts</a>
+        <a href="#reports" data-view="reports"><i class="ph ph-chart-line-up nav-icon"></i> Reports</a>
+        <a href="#settings" data-view="settings"><i class="ph ph-gear nav-icon"></i> Settings</a>
+      </nav>
+      <div class="sidebar-bottom"><div class="avatar">U</div><div><strong>Loading account</strong><small>Personal workspace</small></div></div>
+    </aside>
+
+    <div class="main-column">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menu-button" aria-label="Open navigation"><i class="ph ph-list"></i></button>
+        <div class="breadcrumb">Personal workspace <span>/</span> <strong id="current-section">Accounts</strong></div>
+        
+        <div class="topbar-actions">
+          <button class="icon-button" id="theme-toggle" aria-label="Toggle theme"></button>
+        </div>
+        
+      </header>
+      <main id="view" tabindex="-1"></main>
+    </div>
+  </div>
+
+  <dialog id="form-dialog" class="form-dialog"><form id="dialog-form" method="dialog"><div class="dialog-head"><div><div class="eyebrow" id="dialog-eyebrow">NEW ENTRY</div><h2 id="dialog-title">Add entry</h2></div><button type="button" class="icon-button" id="close-dialog" aria-label="Close"><i class="ph ph-x"></i></button></div><div id="dialog-fields"></div><p class="form-error" id="form-error" role="alert"></p><div class="dialog-actions"><button type="button" class="secondary-button" id="cancel-dialog">Cancel</button><button type="submit" class="primary-button" id="dialog-submit">Save</button></div></form></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

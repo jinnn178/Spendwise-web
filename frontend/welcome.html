@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in — Spendwise</title>
+  <script>
+    const savedTheme = localStorage.getItem('spendwise-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+  <style>
+  :root {
+    --bg: #f8fafc; --surface: #ffffff; --ink: #0f172a; --muted: #64748b;
+    --green: #eab308; --green-dark: #ca8a04; --line: rgba(15,23,42,0.08); 
+    --btn-text: #171717; --card-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+    --input-bg: #f8fafc; --input-focus: #ffffff;
+  }
+  [data-theme="dark"] {
+    --bg: #09090b; --surface: #18181b; --ink: #f8fafc; --muted: #a1a1aa;
+    --green: #facc15; --green-dark: #eab308; --line: rgba(255,255,255,0.08); 
+    --btn-text: #171717; --card-shadow: 0 20px 40px rgba(0,0,0,0.8);
+    --input-bg: rgba(255,255,255,0.05); --input-focus: rgba(255,255,255,0.1);
+  }
+  
+  body{min-height:100vh;background:var(--bg);color:var(--ink);margin:0;font-family:Manrope,sans-serif;transition: background-color 0.4s ease;}
+  .welcome-shell{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+  .welcome-story{background-color:var(--surface);background-image:radial-gradient(at 0% 0%, rgba(250, 204, 21, 0.1) 0px, transparent 50%),radial-gradient(at 100% 100%, rgba(250, 204, 21, 0.05) 0px, transparent 50%);padding:clamp(35px,7vw,95px);display:flex;flex-direction:column;justify-content:space-between;border-right:1px solid var(--line);transition: 0.4s ease;}
+  .welcome-logo{font:800 22px Manrope,sans-serif;display:flex;align-items:center;}
+  .welcome-logo span{display:inline-grid;place-items:center;background:linear-gradient(135deg, #fef08a, var(--green));color:#171717;border-radius:12px;width:38px;height:38px;margin-right:12px;}
+  .welcome-copy h1{font:800 clamp(37px,4.5vw,63px)/1.13 Manrope,sans-serif;letter-spacing:-2px;margin:0 0 20px;color:var(--ink);}
+  .welcome-copy p{font-size:16px;color:var(--muted);max-width:420px;line-height:1.6;}
+  .welcome-story small{color:var(--muted);font-weight:800;letter-spacing:2px;font-size:11px;}
+  .welcome-entry{display:grid;place-items:center;padding:35px}
+  .entry-card{width:min(430px,100%);background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:40px;box-shadow:var(--card-shadow);transition: 0.4s ease;}
+  .eyebrow{color:var(--muted);font:800 10.5px Manrope,sans-serif;letter-spacing:1.5px;}
+  .entry-card h2{font:800 27px Manrope,sans-serif;margin:6px 0;color:var(--ink);}
+  .entry-card p{color:var(--muted);margin:0 0 25px;font-size:14px;}
+  .entry-card .primary-button{width:100%;padding:14px;margin-top:10px;background:linear-gradient(135deg, var(--green), var(--green-dark));color:var(--btn-text);border:none;border-radius:12px;font-weight:800;font-size:14px;cursor:pointer;transition:all 0.3s;}
+  .entry-card .primary-button:hover{transform:translateY(-3px);box-shadow:0 4px 15px rgba(250, 204, 21, 0.2);}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:11px;font-weight:800;margin-bottom:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+  .field input{width:100%;background:var(--input-bg);border:1.5px solid transparent;border-radius:12px;padding:14px 16px;color:var(--ink);font-size:14px;outline:none;transition:all 0.3s;box-sizing:border-box;}
+  .field input:focus{border-color:var(--green);background:var(--input-focus);box-shadow:0 0 0 4px rgba(250, 204, 21, 0.15);}
+  .switch-mode{text-align:center;margin-top:20px;font-size:13px;color:var(--muted)}
+  .switch-mode button{border:0;background:none;color:var(--green);font-weight:800;padding:3px;cursor:pointer;}
+  .auth-error{background:rgba(239, 68, 68, 0.1);color:#ef4444;padding:12px;border-radius:10px;font-size:13px;margin-bottom:16px;display:none;border:1px solid rgba(239, 68, 68, 0.2);}
+  .name-field[hidden]{display:none}
+  @media(max-width:760px){.welcome-shell{grid-template-columns:1fr}.welcome-story{min-height:320px;padding:34px}.welcome-copy h1{font-size:39px}.welcome-entry{padding:20px}.entry-card{padding:27px}}
+  </style>
+</head>
+<body><div class="welcome-shell"><section class="welcome-story"><div class="welcome-logo"><span>S</span>spendwise</div><div class="welcome-copy"><h1>Know where your money goes.</h1><p>Track accounts, income, spending, and reports in one calm workspace.</p></div><small>PERSONAL EXPENSE TRACKER</small></section><section class="welcome-entry"><div class="entry-card"><div class="eyebrow">WELCOME</div><h2 id="form-title">Sign in</h2><p id="form-subtitle">Access your expense tracker workspace.</p><div class="auth-error" id="auth-error" role="alert"></div><form id="auth-form"><div class="field name-field" id="name-field" hidden><label for="name">Your name</label><input id="name" type="text" autocomplete="name" maxlength="80"></div><div class="field"><label for="email">Email</label><input id="email" type="email" placeholder="you@example.com" autocomplete="email" required></div><div class="field"><label for="password">Password</label><input id="password" type="password" placeholder="At least 8 characters" minlength="8" autocomplete="current-password" required></div><button class="primary-button" id="submit-button" type="submit">Sign in →</button></form><div class="switch-mode"><span id="switch-text">New here?</span> <button id="switch-button" type="button">Create an account</button></div></div></section></div>
+<script>
+const TOKEN_KEY='spendwise-session-token';let mode='login';
+const error=document.getElementById('auth-error');
+function showError(message){error.textContent=message;error.style.display='block';}
+function setMode(next){mode=next;error.style.display='none';const registration=mode==='register';document.getElementById('name-field').hidden=!registration;document.getElementById('name').required=registration;document.getElementById('form-title').textContent=registration?'Create account':'Sign in';document.getElementById('form-subtitle').textContent=registration?'Start with your private workspace.':'Access your expense tracker workspace.';document.getElementById('submit-button').textContent=registration?'Create account →':'Sign in →';document.getElementById('switch-text').textContent=registration?'Already have an account?':'New here?';document.getElementById('switch-button').textContent=registration?'Sign in':'Create an account';document.getElementById('password').autocomplete=registration?'new-password':'current-password';}
+document.getElementById('switch-button').addEventListener('click',()=>setMode(mode==='login'?'register':'login'));
+document.getElementById('auth-form').addEventListener('submit',async event=>{event.preventDefault();error.style.display='none';const button=document.getElementById('submit-button');button.disabled=true;button.textContent='Please wait…';try{const body={email:document.getElementById('email').value.trim(),password:document.getElementById('password').value,name:document.getElementById('name').value.trim()};const response=await fetch(`/api/${mode}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const result=await response.json();if(!response.ok)throw Error(result.error||'Could not sign in');sessionStorage.setItem(TOKEN_KEY,result.token);location.href='/index.html';}catch(e){showError(e.message||'Something went wrong');button.disabled=false;button.textContent=mode==='register'?'Create account →':'Sign in →';}});
+</script></body></html>
