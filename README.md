@@ -22,9 +22,7 @@ Spendwise/
 │   └── server.py           HTTP server startup
 ├── database/
 │   └── storage.py          SQLite queries
-├── server.py               Project entry point
-├── PRESENTATION_SCRIPT.md  Five-to-seven-minute presentation script
-└── Spendwise_Money_Flow_Test_Colab.ipynb
+└── server.py               Project entry point
 ```
 
 ## Main features
@@ -66,8 +64,3 @@ Create a Render Web Service from the GitHub repository and use these settings:
 
 Set `SPENDWISE_DB` to `/var/data/spendwise.sqlite3` only when the Render service has a persistent disk mounted at `/var/data`. Otherwise, omit the variable and understand that the free service filesystem can reset.
 
-## Colab
-
-Open `Spendwise_Money_Flow_Test_Colab.ipynb` and run the cells in order. The notebook extracts the project, mounts Google Drive for persistent SQLite storage, starts the server, and opens a preview.
-
-The optional Cloudflare Quick Tunnel cell prints a temporary public HTTPS address. The address works while the Colab runtime and tunnel process remain active and changes after restarting the tunnel.
