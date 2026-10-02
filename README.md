@@ -1,6 +1,6 @@
 # Spendwise
 
-Spendwise is a personal finance website with a connected Telegram bot. Every user has a separate workspace and starts with zero data.
+Spendwise is a full stack personal finance website. Each registered user has a separate workspace that starts with zero data.
 
 ## Project structure
 
@@ -11,30 +11,29 @@ Spendwise/
 │   ├── welcome.html        Sign up and login page
 │   ├── css/styles.css      Responsive light and dark design
 │   └── js/
-│       ├── app.js          Pages, forms, and money calculations
+│       ├── app.js          Navigation, accounts, reports, and calculations
 │       ├── api.js          Browser calls to the backend API
-│       └── charts.js       Category chart calculation and markup
+│       ├── charts.js       Chart calculation and markup
+│       └── transactions.js Transaction forms, validation, and history
 ├── api/
 │   ├── config.py           Paths and server settings
-│   ├── auth.py             Password and token security functions
+│   ├── auth.py             Password and session security
 │   ├── routes.py           HTTP routes and validation
 │   └── server.py           HTTP server startup
 ├── database/
-│   └── storage.py          Database queries
-├── telegram_bot/
-│   └── bot.py              Telegram menus and money entry flow
-├── server.py               Simple project entry point
+│   └── storage.py          SQLite queries
+├── server.py               Project entry point
+├── PRESENTATION_SCRIPT.md  Five-to-seven-minute presentation script
 └── Spendwise_Money_Flow_Test_Colab.ipynb
 ```
 
 ## Main features
 
-- Dashboard: total balance, monthly income, monthly spending, net cash flow, a six month bar chart, category pie chart, and five latest entries.
-- Accounts: create separate bank, wallet, cash, or savings balances. Existing accounts are read-only.
-- Money In and Money Out are recorded through Telegram. The website is used to review the results.
-- Reports: totals, account filter, six month chart, balances, and read-only money history.
-- Telegram: connect with a one-time code, add income or spending, choose an account and category, and see balance summaries.
-- Live synchronization: the website checks for Telegram updates every three seconds and refreshes totals, history, and charts automatically.
+- Dashboard: total balance, monthly income, monthly spending, net cash flow, a six month bar chart, a category chart, and the five latest transactions.
+- Accounts: create separate bank, wallet, cash, or savings accounts with an opening balance.
+- Transactions: record Money In and Money Out with an account, amount, date, category, and description.
+- Reports: filter by account and view totals, a six month chart, account balances, and read-only money history.
+- Authentication: each user signs up, signs in, and accesses only their own saved information.
 
 ## Run locally
 
@@ -44,23 +43,6 @@ python server.py 8000
 ```
 
 Open `http://127.0.0.1:8000`. The default database is `spendwise.sqlite3`.
-
-## Run the Telegram bot
-
-1. Create a bot with BotFather and copy its token.
-2. Start the website and sign in.
-3. In Settings, select **Create code** under Telegram bot.
-4. Set the same database path and the bot token.
-
-```powershell
-$env:SPENDWISE_DB = "C:\path\to\Spendwise\spendwise.sqlite3"
-$env:TELEGRAM_BOT_TOKEN = "your-token"
-python -m telegram_bot.bot
-```
-
-5. Send `/connect CODE` to the bot. The code expires after ten minutes.
-
-Keep the bot token private. Do not add it to source files or the notebook.
 
 ## API routes
 
@@ -72,10 +54,20 @@ Keep the bot token private. Do not add it to source files or the notebook.
 | GET | `/api/me` | Get the signed-in user |
 | GET | `/api/state` | Load the user's workspace |
 | PUT | `/api/state` | Save the user's workspace |
-| POST | `/api/telegram-link` | Create a one-time Telegram connection code |
+
+## Deploy from GitHub to Render
+
+Create a Render Web Service from the GitHub repository and use these settings:
+
+- Runtime: Python 3
+- Build command: leave empty
+- Start command: `python server.py`
+- Health check path: `/welcome.html`
+
+Set `SPENDWISE_DB` to `/var/data/spendwise.sqlite3` only when the Render service has a persistent disk mounted at `/var/data`. Otherwise, omit the variable and understand that the free service filesystem can reset.
 
 ## Colab
 
-Open `Spendwise_Money_Flow_Test_Colab.ipynb` and run the cells in order. The notebook extracts this folder structure, mounts Google Drive for persistent SQLite storage, starts the server, and opens a preview.
+Open `Spendwise_Money_Flow_Test_Colab.ipynb` and run the cells in order. The notebook extracts the project, mounts Google Drive for persistent SQLite storage, starts the server, and opens a preview.
 
-The optional Cloudflare Quick Tunnel cell prints a public HTTPS address. Anyone can open that address while the Colab runtime and tunnel process remain active. The address changes when the tunnel is restarted.
+The optional Cloudflare Quick Tunnel cell prints a temporary public HTTPS address. The address works while the Colab runtime and tunnel process remain active and changes after restarting the tunnel.

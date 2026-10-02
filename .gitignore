@@ -1,7 +1,7 @@
 __pycache__/
 *.pyc
 .vscode/
+.env
 spendwise.sqlite3
 Spendwise_Modular_Fullstack.zip
 Spendwise_Money_Flow_Test_Colab.ipynb
-.env

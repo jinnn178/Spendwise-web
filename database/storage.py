@@ -43,17 +43,6 @@ def initialize():
                 state_json TEXT NOT NULL,
                 FOREIGN KEY(user_id) REFERENCES users(id)
             );
-            CREATE TABLE IF NOT EXISTS telegram_link_codes (
-                code TEXT PRIMARY KEY,
-                user_id INTEGER NOT NULL,
-                expires_at INTEGER NOT NULL,
-                FOREIGN KEY(user_id) REFERENCES users(id)
-            );
-            CREATE TABLE IF NOT EXISTS telegram_links (
-                chat_id TEXT PRIMARY KEY,
-                user_id INTEGER NOT NULL UNIQUE,
-                FOREIGN KEY(user_id) REFERENCES users(id)
-            );
         ''')
 
 
@@ -108,26 +97,3 @@ def save_state(user_id, state):
             INSERT INTO states(user_id, state_json) VALUES (?, ?)
             ON CONFLICT(user_id) DO UPDATE SET state_json = excluded.state_json
         ''', (user_id, json.dumps(state, ensure_ascii=False)))
-
-
-def save_link_code(code, user_id, expires_at):
-    with connect() as database:
-        database.execute('DELETE FROM telegram_link_codes WHERE user_id = ? OR expires_at <= ?', (user_id, int(time.time())))
-        database.execute('INSERT INTO telegram_link_codes(code, user_id, expires_at) VALUES (?, ?, ?)', (code, user_id, expires_at))
-
-
-def connect_telegram_chat(code, chat_id):
-    with connect() as database:
-        row = database.execute('SELECT user_id FROM telegram_link_codes WHERE code = ? AND expires_at > ?', (code, int(time.time()))).fetchone()
-        if not row:
-            return False
-        database.execute('DELETE FROM telegram_links WHERE user_id = ? OR chat_id = ?', (row['user_id'], str(chat_id)))
-        database.execute('INSERT INTO telegram_links(chat_id, user_id) VALUES (?, ?)', (str(chat_id), row['user_id']))
-        database.execute('DELETE FROM telegram_link_codes WHERE code = ?', (code,))
-    return True
-
-
-def user_id_for_chat(chat_id):
-    with connect() as database:
-        row = database.execute('SELECT user_id FROM telegram_links WHERE chat_id = ?', (str(chat_id),)).fetchone()
-    return row['user_id'] if row else None

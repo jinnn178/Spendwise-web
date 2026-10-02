@@ -22,7 +22,3 @@ def new_token():
 
 def token_digest(token):
     return hashlib.sha256(token.encode('ascii')).hexdigest()
-
-
-def new_link_code():
-    return secrets.token_hex(3).upper()

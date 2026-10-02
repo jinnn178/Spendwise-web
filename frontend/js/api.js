@@ -34,5 +34,4 @@ export const saveWorkspace = state => request('/api/state', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(state)
 });
-export const createTelegramCode = () => request('/api/telegram-link', { method: 'POST' });
 export const signOut = () => request('/api/logout', { method: 'POST' }).finally(clearToken);

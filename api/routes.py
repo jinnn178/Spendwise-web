@@ -6,7 +6,7 @@ from http.server import SimpleHTTPRequestHandler
 from urllib.parse import urlparse
 
 from database import storage
-from .auth import new_link_code, new_password_record, new_token, password_matches
+from .auth import new_password_record, new_token, password_matches
 from .config import FRONTEND_ROOT, MAX_REQUEST_BYTES, SESSION_SECONDS
 
 
@@ -92,13 +92,6 @@ class SpendwiseHandler(SimpleHTTPRequestHandler):
             if token:
                 storage.delete_session(token)
             return self.json_response(200, {'ok': True})
-        if path == '/api/telegram-link':
-            user = self.require_user()
-            if not user:
-                return
-            code = new_link_code()
-            storage.save_link_code(code, user['id'], int(time.time()) + 600)
-            return self.json_response(200, {'code': code, 'expiresInSeconds': 600})
         self.json_response(404, {'error': 'API route not found'})
 
     def do_PUT(self):
